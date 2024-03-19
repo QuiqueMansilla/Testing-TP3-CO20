@@ -118,8 +118,8 @@ void test_con_todos_los_leds_apagados_encender_todos_los_leds(void) {
 }
 
 /** 
- ** @brief Prueba6: Con todos los Leds apagados prender todos los leds y verificar
- ** que efectivamente se prendieron todos los leds
+ ** @brief Prueba7: Con todos los Leds encendidos apagar todos los leds y verificar
+ ** que efectivamente se apagaron todos los leds
  **/
 void test_con_todos_los_leds_encendidos_apagar_todos_los_leds(void) {
     led_turn_on_all(&leds_virtuales);
