@@ -72,4 +72,13 @@ bool led_get_status(int led, uint16_t *puerto) {
     return false;
 }
 
+void led_turn_on_all(uint16_t *puerto) {
+    puntero = puerto;
+    *puntero = ALL_LEDS_ON;
+}
+
+void led_turn_off_all(uint16_t *puerto) {
+    puntero = puerto;
+    *puntero = ALL_LEDS_OFF;
+}
 /* === End of documentation =========================================== */

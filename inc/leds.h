@@ -75,7 +75,7 @@ void leds_init(uint16_t *puerto);
 
 /**
  * @brief Función de encendido de un bit del puerto configurado en "leds_init"
- * @param led Numero de bit (led) con el que trabajaremos
+ * @param led Numero de bit (led) con el que trabajamos
  */
 void led_turn_on(int led);
 
@@ -90,6 +90,18 @@ void led_turn_off(int led);
  * @param led Numero de bit (led) con el que trabajaremos
  */
 bool led_get_status(int led, uint16_t *puerto);
+
+/**
+ * @brief Función que prende todos los leds del puerto configurado
+ * @param puerto Dirección del puerto (Dirección física memo) con el que trabajamos
+ */
+void led_turn_on_all(uint16_t *puerto);
+
+/**
+ * @brief Función que apaga todos los leds del puerto configurado
+ * @param puerto Dirección del puerto (Dirección física memo) con el que trabajamos
+ */
+void led_turn_off_all(uint16_t *puerto);
 
 /* === End of documentation ==================================================================== */
 

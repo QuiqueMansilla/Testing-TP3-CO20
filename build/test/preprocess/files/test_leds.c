@@ -155,3 +155,51 @@ void test_con_todos_leds_apagados_prender_uno_y_verificar_prendido(void) {
     do {if ((led_get_status(7, &leds_virtuales))) {} else {UnityFail( ((" Expected TRUE Was FALSE")), (UNITY_UINT)((UNITY_UINT)(107)));}} while(0);
 
 }
+
+
+
+
+
+
+
+
+
+
+
+void test_con_todos_los_leds_apagados_encender_todos_los_leds(void) {
+
+    leds_init(&leds_virtuales);
+
+    led_turn_on_all(&leds_virtuales);
+
+    UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((0xFF)), (UNITY_INT)(UNITY_UINT16)((leds_virtuales)), (
+
+   ((void *)0)
+
+   ), (UNITY_UINT)(117), UNITY_DISPLAY_STYLE_UINT16);
+
+}
+
+
+
+
+
+
+
+
+
+
+
+void test_con_todos_los_leds_encendidos_apagar_todos_los_leds(void) {
+
+    led_turn_on_all(&leds_virtuales);
+
+    led_turn_off_all(&leds_virtuales);
+
+    UnityAssertEqualNumber((UNITY_INT)(UNITY_UINT16)((0x00)), (UNITY_INT)(UNITY_UINT16)((leds_virtuales)), (
+
+   ((void *)0)
+
+   ), (UNITY_UINT)(127), UNITY_DISPLAY_STYLE_UINT16);
+
+}

@@ -106,3 +106,23 @@ void test_con_todos_leds_apagados_prender_uno_y_verificar_prendido(void) {
     led_turn_on(LED07);
     TEST_ASSERT_TRUE(led_get_status(LED07, &leds_virtuales));
 }
+
+/** 
+ ** @brief Prueba6: Con todos los Leds apagados prender todos los leds y verificar
+ ** que efectivamente se prendieron todos los leds
+ **/
+void test_con_todos_los_leds_apagados_encender_todos_los_leds(void) {
+    leds_init(&leds_virtuales);
+    led_turn_on_all(&leds_virtuales);
+    TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_ON, leds_virtuales);
+}
+
+/** 
+ ** @brief Prueba6: Con todos los Leds apagados prender todos los leds y verificar
+ ** que efectivamente se prendieron todos los leds
+ **/
+void test_con_todos_los_leds_encendidos_apagar_todos_los_leds(void) {
+    led_turn_on_all(&leds_virtuales);
+    led_turn_off_all(&leds_virtuales);
+    TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_OFF, leds_virtuales);
+}
