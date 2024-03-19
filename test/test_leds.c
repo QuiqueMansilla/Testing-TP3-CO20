@@ -27,14 +27,24 @@ SPDX-License-Identifier: MIT
  ** @brief Funciones de prueba para la capa de abstracción para gestión de puertos digitales de leds.c
  **/
 
+/* === Headers files inclusions ===================================== */
 #include "leds.h"
 #include "unity.h"
 
+/* === Macros definitions =========================================== */
+
+/* === Private data type declarations ==================================== */
+
+/* === Private variable declarations ====================================== */
 static uint16_t leds_virtuales;
 
-static const int LED = 3;
-//static const int ALL_LEDS_OFF = 0x00;
+/* === Private function declarations ====================================== */
 
+/* === Public variable definitions ===========================================*/
+
+/* === Private variable definitions ==========================================*/
+
+/* === Private function implementation ====================================== */
 void setUp(void) {
     leds_init(&leds_virtuales); // inicializo el driver, esta linea va en todas la pruebas
 }
@@ -45,9 +55,9 @@ void setUp(void) {
  **/
 void test_todos_los_leds_inician_apagados(void) {
     //TEST_FAIL_MESSAGE("Arrancamos");
-    uint16_t leds_virtuales = 0xFF; // direccion del puerto
+    uint16_t leds_virtuales = PORT_ADDRESS; // direccion del puerto
     leds_init(&leds_virtuales);
-    TEST_ASSERT_EQUAL_UINT16(0X00, leds_virtuales);
+    TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_OFF, leds_virtuales);
 }
 
 /** 
@@ -55,12 +65,11 @@ void test_todos_los_leds_inician_apagados(void) {
  ** efectivamente el bit 2 se pone en 1 y el resto permanece en cero
  **/
 void test_prender_un_led(void) {
-    led_turn_on(LED);
-
+    led_turn_on(LED03);
     // El bit 2 está en alto
-    TEST_ASSERT_BIT_HIGH(LED - 1, leds_virtuales);
+    TEST_ASSERT_BIT_HIGH(LED03 - LED_OFFSET, leds_virtuales);
     // Todos los otros bits están en bajo
-    TEST_ASSERT_BITS_LOW(~(1 << (LED - 1)), leds_virtuales);
+    TEST_ASSERT_BITS_LOW(~(1 << (LED03 - LED_OFFSET)), leds_virtuales);
 }
 
 /** 
@@ -68,22 +77,32 @@ void test_prender_un_led(void) {
  ** se apaga y que el resto no cambia
  **/
 void test_apagar_un_led(void) {
-    led_turn_on(LED);
-    led_turn_off(LED);
-
-    TEST_ASSERT_EQUAL_UINT16(0x00, leds_virtuales);
+    led_turn_on(LED03);
+    led_turn_off(LED03);
+    TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_OFF, leds_virtuales);
 }
 
 /** 
- ** @brief Prueba4_y_5: 4_ Apagar todos los leds que ya estan prendidos
- ** 5_ Prender Leds ya estan prendidos antes
+ ** @brief Prueba4: combina 4_ Apagar todos los leds que ya estan prendidos
+ ** y 5_ Prender Leds ya estan prendidos antes.
+ ** En esta prueba enciende 3 leds y apaga 2
  **/
 void test_prender_y_apagar_varios_leds(void) {
-    led_turn_on(5);
-    led_turn_on(7);
-    led_turn_on(5);
-    led_turn_off(5);
-    led_turn_off(9);
+    led_turn_on(LED05);
+    led_turn_on(LED07);
+    led_turn_on(LED05);
+    led_turn_off(LED05);
+    led_turn_off(LED09);
 
-    TEST_ASSERT_EQUAL_UINT16(1 << (7-1), leds_virtuales);
+    TEST_ASSERT_EQUAL_UINT16(BIT_HIGH << (LED07-LED_OFFSET), leds_virtuales);
+}
+
+/** 
+ ** @brief Prueba5: Con todos los Leds apagados prender un Led y verificar
+ ** que al consultar el estado del mismo, me informa que está prendido
+ **/
+void test_con_todos_leds_apagados_prender_uno_y_verificar_prendido(void) {
+    leds_init(&leds_virtuales);
+    led_turn_on(LED07);
+    TEST_ASSERT_TRUE(led_get_status(LED07, &leds_virtuales));
 }

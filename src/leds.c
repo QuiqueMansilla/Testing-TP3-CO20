@@ -27,17 +27,26 @@ SPDX-License-Identifier: MIT
  ** @brief Capa de abstracción para gestión de puertos digitales de leds
  **/
 
+/* === Headers files inclusions =========================================== */
 #include "leds.h"
 
-#define BIT_HIGH 1
-#define LED_OFFSET 1
-#define ALL_LEDS_OFF 0x00
+/* === Macros definitions =========================================== */
 
+/* === Private data type declarations ==================================== */
+
+/* === Private variable declarations ====================================== */
+
+/* === Private function declarations ====================================== */
+
+/* === Public variable definitions ===========================================*/
+
+/* === Private variable definitions ==========================================*/
+static uint16_t * puntero;
+
+/* === Private function implementation ====================================== */
 static uint16_t led_to_mask(int led) {
     return (BIT_HIGH << (led - LED_OFFSET));
 }
-
-static uint16_t * puntero;
 
 void leds_init(uint16_t *puerto) {
     puntero = puerto;
@@ -51,3 +60,16 @@ void led_turn_on(int led) {
 void led_turn_off(int led) {
     *puntero &= ~led_to_mask(led);
 }
+
+bool led_get_status(int led, uint16_t *puerto) {
+    puntero = puerto;
+    if ((led <= LED16) && (led >= LED01)) {
+        if (*puntero & led_to_mask(led))
+            return true;
+        else
+            return false;
+    }
+    return false;
+}
+
+/* === End of documentation =========================================== */
