@@ -23,15 +23,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 ***********************************************************************/
 
-/** @file test_leds.c
+/** @file test_API_GPIO.c
  ** @brief Funciones de prueba para la capa de abstracción para gestión de puertos digitales de leds.c
  **/
 
 /* === Headers files inclusions ===================================== */
-#include "leds.h"
+#include "api_gpio.h"
 #include "unity.h"
+#include "mock_hal_gpio.h"
 
 /* === Macros definitions =========================================== */
+#define LD1 1
+#define LD2 2
+#define LD3 3
+#define GPIO_PIN_SET 1
+#define GPIO_PIN_RESET 0
+#define LED_OFFSET 1
+#define ALL_LEDS_OFF 0x00
+#define ALL_LEDS_ON 0x03
+#define PORT_ADDRESS_GPIOB 0xFF
 
 /* === Private data type declarations ==================================== */
 
@@ -45,18 +55,21 @@ static uint16_t leds_virtuales;
 /* === Private variable definitions ==========================================*/
 
 /* === Private function implementation ====================================== */
+
+/** 
+ ** @brief Inicializo el driver, MX_GPIO_init(&leds_virtuales) va en todos los tests 
+ **/
 void setUp(void) {
-    leds_init(&leds_virtuales); // inicializo el driver, esta linea va en todas la pruebas
+    MX_GPIO_init(&leds_virtuales);
 }
 
 /** 
- ** @brief Prueba1: Al iniciar el controlador los Leds deben quedar todos apagados 
+ ** @brief Test1: Al iniciar el controlador los Leds deben quedar todos apagados 
  ** los bits en 0 sin importar el estado anterior.
  **/
 void test_todos_los_leds_inician_apagados(void) {
-    //TEST_FAIL_MESSAGE("Arrancamos");
-    uint16_t leds_virtuales = PORT_ADDRESS; // direccion del puerto
-    leds_init(&leds_virtuales);
+    uint16_t leds_virtuales = PORT_ADDRESS_GPIOB; // direccion del puerto
+    MX_GPIO_init(&leds_virtuales);
     TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_OFF, leds_virtuales);
 }
 

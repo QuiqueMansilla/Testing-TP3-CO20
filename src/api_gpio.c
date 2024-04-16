@@ -23,14 +23,25 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 ***********************************************************************/
 
-/** @file leds.c
- ** @brief Capa de abstracción para gestión de puertos digitales de leds
+/** @file API_GPIO.c
+ ** @brief capa de abstracción para gestión de puertos GPIO con 3 leds on
+ **        board para placa STM32-NucleoF4xx conectados al puerto GPIO GPIOB
  **/
 
 /* === Headers files inclusions =========================================== */
-#include "leds.h"
+#include "api_gpio.h"
+#include "hal_gpio.h"
 
 /* === Macros definitions =========================================== */
+#define LD1 1
+#define LD2 2
+#define LD3 3
+#define GPIO_PIN_SET 1
+#define GPIO_PIN_RESET 0
+#define LED_OFFSET 1
+#define ALL_LEDS_OFF 0x00
+#define ALL_LEDS_ON 0x03
+#define PORT_ADDRESS_GPIOB 0xFF
 
 /* === Private data type declarations ==================================== */
 
@@ -41,44 +52,54 @@ SPDX-License-Identifier: MIT
 /* === Public variable definitions ===========================================*/
 
 /* === Private variable definitions ==========================================*/
-static uint16_t * puntero;
+static uint16_t * Puerto_GPIO;
 
 /* === Private function implementation ====================================== */
-static uint16_t led_to_mask(int led) {
-    return (BIT_HIGH << (led - LED_OFFSET));
+static uint16_t led_to_mask(int Ledx) {
+    return (GPIO_PIN_SET << (Ledx - LED_OFFSET));
 }
 
-void leds_init(uint16_t *puerto) {
-    puntero = puerto;
-    *puntero = ALL_LEDS_OFF;
+void MX_GPIO_init(uint16_t *GPIOB) {
+    Puerto_GPIO = GPIOB;
+    *Puerto_GPIO = ALL_LEDS_OFF;
 }
 
-void led_turn_on(int led) {
-    *puntero |= led_to_mask(led);
+void writeLedOn_GPIO(int LDx) {
+    
+    HAL_GPIO_WritePin(GPIOB, LDx, GPIO_PIN_SET);
+    //*Puerto_GPIO |= led_to_mask(Ledx);
 }
 
-void led_turn_off(int led) {
-    *puntero &= ~led_to_mask(led);
+void writeLedOff_GPIO(int LDx) {
+    
+    HAL_GPIO_WritePin(GPIOB, LDx, GPIO_PIN_RESET);
+    //*Puerto_GPIO &= ~led_to_mask(Ledx);
 }
 
-bool led_get_status(int led, uint16_t *puerto) {
-    puntero = puerto;
-    if ((led <= LED16) && (led >= LED01)) {
-        if (*puntero & led_to_mask(led))
-            return true;
-        else
-            return false;
-    }
-    return false;
+bool toggleLed_GPIO(int LDx) {
+    
+    HAL_GPIO_TogglePin(GPIOB, LDx);
+    //Puerto_GPIO = PORTB;
+    //if ((Ledx <= LED16) && (Ledx >= LED01)) {
+    //    if (*Puerto_GPIO & led_to_mask(Ledx))
+    //        return true;
+    //    else
+    //        return false;
+    //}
+    //return false;
 }
 
-void led_turn_on_all(uint16_t *puerto) {
-    puntero = puerto;
-    *puntero = ALL_LEDS_ON;
+void writeLedOnAll_GPIO(uint16_t *GPIOB) {
+    
+    HAL_GPIO_WritePin(GPIOB, LD1|LD2|LD3, GPIO_PIN_SET);
+    //Puerto_GPIO = GPIOB;
+    //*Puerto_GPIO = ALL_LEDS_ON;
 }
 
-void led_turn_off_all(uint16_t *puerto) {
-    puntero = puerto;
-    *puntero = ALL_LEDS_OFF;
+void writeLedOffAll_GPIO(uint16_t *GPIOB) {
+    
+    HAL_GPIO_WritePin(GPIOB, LD1|LD2|LD3, GPIO_PIN_RESET);
+    //Puerto_GPIO = GPIOB;
+    //*Puerto_GPIO = ALL_LEDS_OFF;
 }
 /* === End of documentation =========================================== */

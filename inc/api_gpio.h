@@ -22,11 +22,12 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 SPDX-License-Identifier: MIT
 ***********************************************************************/
-#ifndef LEDS_H
-#define LEDS_H
+#ifndef API_GPIO_H
+#define API_GPIO_H
 
-/** @file leds.h
- ** @brief Definición de funciones de capa de abstracción para gestión de puertos digitales de leds
+/** @file API_GPIO.h
+ ** @brief Definición de funciones de capa de abstracción para gestión de puertos GPIO 
+ **        con 3 leds on board para placa STM32-NucleoF4xx
  **/
 
 /* === Headers files inclusions ===================================== */
@@ -40,27 +41,6 @@ extern "C" {
 #endif
 
 /* === Public macros definitions ===================================== */
-#define LED01 1
-#define LED02 2
-#define LED03 3
-#define LED04 4
-#define LED05 5
-#define LED06 6
-#define LED07 7
-#define LED08 8
-#define LED09 9
-#define LED10 10
-#define LED11 11
-#define LED12 12
-#define LED13 13
-#define LED14 14
-#define LED15 15
-#define LED16 16
-#define BIT_HIGH 1
-#define LED_OFFSET 1
-#define ALL_LEDS_OFF 0x00
-#define ALL_LEDS_ON 0xFF
-#define PORT_ADDRESS 0xFF
 
 /* === Public data type declarations ===================================== */
 
@@ -68,40 +48,40 @@ extern "C" {
 
 /* === Public function declarations ===================================== */
 /**
- * @brief Función de inicialización del puerto de bits a utilizar
- * @param puerto Dirección del puerto (Dirección física memo) con el que trabajaremos
+ * @brief Función de inicialización del puerto GPIO a utilizar 
+ * @param GPIOB Dirección del puerto B del GPIO con el que trabajamos
  */
-void leds_init(uint16_t *puerto);
+void MX_GPIO_init(uint16_t *GPIOB);
 
 /**
- * @brief Función de encendido de un bit del puerto configurado en "leds_init"
- * @param led Numero de bit (led) con el que trabajamos
+ * @brief Función de encendido de un bit del puerto GPIO configurado en "MX_GPIO_ini"
+ * @param LDx Numero de bit (led) con el que trabajamos
  */
-void led_turn_on(int led);
+void writeLedOn_GPIO(int LDx);
 
 /**
- * @brief Función de apagado de un bit del puerto configurado en "leds_init"
- * @param led Numero de bit (led) con el que trabajaremos
+ * @brief Función de apagado de un bit del puerto GPIO configurado en "MX_GPIO_ini"
+ * @param LDx Numero de bit (led) con el que trabajaremos
  */
-void led_turn_off(int led);
+void writeLedOff_GPIO(int LDx);
 
 /**
- * @brief Función que consulta y devuelve el estado de un led (bit)
- * @param led Numero de bit (led) con el que trabajaremos
+ * @brief Función que hace un toggle sobre el led (bit) que se pasa como parámetro
+ * @param LDx Numero de bit (led) con el que trabajaremos
  */
-bool led_get_status(int led, uint16_t *puerto);
+bool toggleLed_GPIO(int LDx);
 
 /**
- * @brief Función que prende todos los leds del puerto configurado
- * @param puerto Dirección del puerto (Dirección física memo) con el que trabajamos
+ * @brief Función que prende los 3 leds de la placa del puerto GPIO configurado
+ * @param GPIOB Dirección del puerto B del GPIO con el que trabajamos
  */
-void led_turn_on_all(uint16_t *puerto);
+void writeLedOnAll_GPIO(uint16_t *GPIOB);
 
 /**
- * @brief Función que apaga todos los leds del puerto configurado
- * @param puerto Dirección del puerto (Dirección física memo) con el que trabajamos
+ * @brief Función que apaga los 3 leds de la placa del puerto configurado
+ * @param GPIOB Dirección del puerto B del GPIO con el que trabajamos
  */
-void led_turn_off_all(uint16_t *puerto);
+void writeLedOffAll_GPIO(uint16_t *GPIOB);
 
 /* === End of documentation ==================================================================== */
 
@@ -109,4 +89,4 @@ void led_turn_off_all(uint16_t *puerto);
 }
 #endif
 
-#endif /* LEDS_H */
+#endif /* API_GPIO_H */
