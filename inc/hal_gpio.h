@@ -30,7 +30,6 @@ SPDX-License-Identifier: MIT
  **/
 
 #include "stdint.h"
-#include "stdbool.h"
 
 //uint16_t PORT_GPIOB;
 //int LEDx;

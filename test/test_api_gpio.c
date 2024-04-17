@@ -31,7 +31,6 @@ SPDX-License-Identifier: MIT
 #include "api_gpio.h"
 #include "unity.h"
 #include "mock_hal_gpio.h"
-#include "main.h"
 
 /* === Macros definitions =========================================== */
 #define LD1 1
@@ -47,7 +46,7 @@ SPDX-License-Identifier: MIT
 /* === Private data type declarations ==================================== */
 
 /* === Private variable declarations ====================================== */
-extern uint16_t leds_virtuales;
+static uint16_t leds_virtuales;
 
 /* === Private function declarations ====================================== */
 
@@ -70,7 +69,7 @@ void setUp(void) {
  **/
 void test_todos_los_leds_inician_apagados(void) {
     uint16_t leds_virtuales = PORT_ADDRESS_GPIOB;
-    void init_GPIO(leds_virtuales);
+    init_GPIO(&leds_virtuales);
     TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_OFF, leds_virtuales);
 }
 

@@ -31,7 +31,6 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions =========================================== */
 #include "api_gpio.h"
 #include "hal_gpio.h"
-#include "main.h"
 
 /* === Macros definitions =========================================== */
 #define LD1 1
@@ -54,10 +53,11 @@ SPDX-License-Identifier: MIT
 
 /* === Private variable definitions ==========================================*/
 static uint16_t * Puerto_GPIO;
+static uint16_t * GPIOB;
 
 /* === Private function implementation ====================================== */
-static uint16_t led_to_mask(int Ledx) {
-    return (GPIO_PIN_SET << (Ledx - LED_OFFSET));
+static uint16_t led_to_mask(int LDx) {
+    return (GPIO_PIN_SET << (LDx - LED_OFFSET));
 }
 
 void init_GPIO(uint16_t *GPIOB) {

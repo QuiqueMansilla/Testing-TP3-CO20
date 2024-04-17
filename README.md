@@ -1,7 +1,7 @@
-Trabajo Práctico N°2 de Testing de Software de Sistemas Embebidos
+Trabajo Práctico N°3 de Testing de Software de Sistemas Embebidos
 Cohorte CESE20
 
-Testeo de software de driver genérico para manejo de leds de un puerto específico
+Testeo de software de driver de proyecto personal para manejo de los 3 leds de una placa de desarrollo STM32-Nucleo-F4xx
 
 Este repositorio utiliza [pre-commit](https://pre-commit.com) para validaciones de formato. Para trabajar con el mismo usted debería tener instalado:
 
