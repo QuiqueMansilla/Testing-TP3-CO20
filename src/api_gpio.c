@@ -23,7 +23,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 SPDX-License-Identifier: MIT
 ***********************************************************************/
 
-/** @file API_GPIO.c
+/** @file api_gpio.c
  ** @brief capa de abstracción para gestión de puertos GPIO con 3 leds on
  **        board para placa STM32-NucleoF4xx conectados al puerto GPIO GPIOB
  **/
@@ -31,6 +31,7 @@ SPDX-License-Identifier: MIT
 /* === Headers files inclusions =========================================== */
 #include "api_gpio.h"
 #include "hal_gpio.h"
+#include "main.h"
 
 /* === Macros definitions =========================================== */
 #define LD1 1
@@ -59,7 +60,7 @@ static uint16_t led_to_mask(int Ledx) {
     return (GPIO_PIN_SET << (Ledx - LED_OFFSET));
 }
 
-void MX_GPIO_init(uint16_t *GPIOB) {
+void init_GPIO(uint16_t *GPIOB) {
     Puerto_GPIO = GPIOB;
     *Puerto_GPIO = ALL_LEDS_OFF;
 }
@@ -79,24 +80,17 @@ void writeLedOff_GPIO(int LDx) {
 bool toggleLed_GPIO(int LDx) {
     
     HAL_GPIO_TogglePin(GPIOB, LDx);
-    //Puerto_GPIO = PORTB;
-    //if ((Ledx <= LED16) && (Ledx >= LED01)) {
-    //    if (*Puerto_GPIO & led_to_mask(Ledx))
-    //        return true;
-    //    else
-    //        return false;
-    //}
-    //return false;
+    
 }
 
-void writeLedOnAll_GPIO(uint16_t *GPIOB) {
+void writeLedOnAll_GPIO(void) {
     
     HAL_GPIO_WritePin(GPIOB, LD1|LD2|LD3, GPIO_PIN_SET);
     //Puerto_GPIO = GPIOB;
     //*Puerto_GPIO = ALL_LEDS_ON;
 }
 
-void writeLedOffAll_GPIO(uint16_t *GPIOB) {
+void writeLedOffAll_GPIO(void) {
     
     HAL_GPIO_WritePin(GPIOB, LD1|LD2|LD3, GPIO_PIN_RESET);
     //Puerto_GPIO = GPIOB;

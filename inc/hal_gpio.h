@@ -29,12 +29,22 @@ SPDX-License-Identifier: MIT
  ** @brief Definición de funciones que reemplazará Cmock para el test unitario
  **/
 
-#include <stdint.h>
+#include "stdint.h"
+#include "stdbool.h"
 
-void HAL_GPIO_WritePin(GPIOB, LDx, GPIO_PIN_SET);
+//uint16_t PORT_GPIOB;
+//int LEDx;
+//int GPIO_PIN_STATUS;
 
-void HAL_GPIO_WritePin(GPIOB, LDx, GPIO_PIN_RESET);
+/* ========= Funciones destinadas a ser remmplazadas con mock ==================*/
+/** 
+ ** @brief MX_GPIO_Init() usa datos definidos en la HAL de la placa por lo que la 
+ **        evitaremos en el testing unitario y usaremos otra funcion "init_GPIO()" 
+ **/
+void MX_GPIO_Init(void);
 
-void HAL_GPIO_TogglePin(GPIOB, LDx);
+void HAL_GPIO_WritePin(uint16_t PORT_GPIOB, int LEDx, int GPIO_PIN_STATUS);
 
-#endif HAL_GPIO_H
+void HAL_GPIO_TogglePin(uint16_t PORT_GPIOB, int LEDx);
+
+#endif //HAL_GPIO_H

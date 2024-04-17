@@ -25,7 +25,7 @@ SPDX-License-Identifier: MIT
 #ifndef API_GPIO_H
 #define API_GPIO_H
 
-/** @file API_GPIO.h
+/** @file api_gpio.h
  ** @brief Definición de funciones de capa de abstracción para gestión de puertos GPIO 
  **        con 3 leds on board para placa STM32-NucleoF4xx
  **/
@@ -48,19 +48,20 @@ extern "C" {
 
 /* === Public function declarations ===================================== */
 /**
- * @brief Función de inicialización del puerto GPIO a utilizar 
+ * @brief Función de inicialización del puerto GPIO a utilizar que reemplaza a la
+ *        función MX_GPIO_Init() del driver original ya que usa elementos de la HAL 
  * @param GPIOB Dirección del puerto B del GPIO con el que trabajamos
  */
-void MX_GPIO_init(uint16_t *GPIOB);
+void init_GPIO(uint16_t *GPIOB);
 
 /**
- * @brief Función de encendido de un bit del puerto GPIO configurado en "MX_GPIO_ini"
+ * @brief Función de encendido de un bit del puerto GPIO configurado en "init_GPIO()"
  * @param LDx Numero de bit (led) con el que trabajamos
  */
 void writeLedOn_GPIO(int LDx);
 
 /**
- * @brief Función de apagado de un bit del puerto GPIO configurado en "MX_GPIO_ini"
+ * @brief Función de apagado de un bit del puerto GPIO configurado en "init_GPIO()"
  * @param LDx Numero de bit (led) con el que trabajaremos
  */
 void writeLedOff_GPIO(int LDx);
@@ -75,13 +76,13 @@ bool toggleLed_GPIO(int LDx);
  * @brief Función que prende los 3 leds de la placa del puerto GPIO configurado
  * @param GPIOB Dirección del puerto B del GPIO con el que trabajamos
  */
-void writeLedOnAll_GPIO(uint16_t *GPIOB);
+void writeLedOnAll_GPIO(void);
 
 /**
  * @brief Función que apaga los 3 leds de la placa del puerto configurado
  * @param GPIOB Dirección del puerto B del GPIO con el que trabajamos
  */
-void writeLedOffAll_GPIO(uint16_t *GPIOB);
+void writeLedOffAll_GPIO(void);
 
 /* === End of documentation ==================================================================== */
 

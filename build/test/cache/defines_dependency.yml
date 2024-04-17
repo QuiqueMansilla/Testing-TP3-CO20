@@ -1,3 +1,9 @@
 ---
 src/leds.c:
 - TEST
+build/test/mocks/mock_hal_gpio.c:
+- TEST
+src/api_gpio.c:
+- TEST
+src/main.c:
+- TEST
