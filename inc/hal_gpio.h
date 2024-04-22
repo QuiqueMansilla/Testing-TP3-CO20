@@ -42,8 +42,8 @@ SPDX-License-Identifier: MIT
  **/
 void MX_GPIO_Init(void);
 
-void HAL_GPIO_WritePin(uint16_t PORT_GPIOB, int LEDx, int GPIO_PIN_STATUS);
+void HAL_GPIO_WritePin(uint16_t *PORT_GPIOB, int LEDx, int GPIO_PIN_STATUS);
 
-void HAL_GPIO_TogglePin(uint16_t PORT_GPIOB, int LEDx);
+void HAL_GPIO_TogglePin(uint16_t *PORT_GPIOB, int LEDx);
 
 #endif //HAL_GPIO_H

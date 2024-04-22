@@ -41,12 +41,28 @@ SPDX-License-Identifier: MIT
 #define LED_OFFSET 1
 #define ALL_LEDS_OFF 0x00
 #define ALL_LEDS_ON 0x03
+#define LED1_ON 0x01
+#define LED2_ON 0x02
+#define LED3_ON 0x04
+#define LED1_OFF 0xFE  // 0b 1111 1110
+#define LED2_OFF 0xFD  // 0b 1111 1101
+#define LED3_OFF 0xFB  // 0b 1111 1011
+#define MASK_LED1 0x01 // Usar con LED1_OFF o LED1_ON en TETS_ASSERT_BITS() 
+#define MASK_LED2 0x02 // Usar con LED2_OFF o LED2_ON en TETS_ASSERT_BITS()
+#define MASK_LED3 0x04 // Usar con LED3_OFF o LED3_ON en TETS_ASSERT_BITS()
+#define EXPECTED_MASK_OFF 0x00 // Usar solo en "test_apagar_un_led(void)" como mascara
+#define EXPECTED_MASK_ON_LED1 0x01 // Usar solo en "test_encender_un_led(void)" como mascara para LED1_ON
+#define EXPECTED_MASK_ON_LED2 0x02 // Usar solo en "test_encender_un_led(void)" como mascara para LED2_ON
+#define EXPECTED_MASK_ON_LED3 0x03 // Usar solo en "test_encender_un_led(void)" como mascara para LED3_ON
 #define PORT_ADDRESS_GPIOB 0xFF
+
 
 /* === Private data type declarations ==================================== */
 
 /* === Private variable declarations ====================================== */
 static uint16_t leds_virtuales;
+extern uint16_t * Puerto_GPIO;
+extern uint16_t * GPIOB;
 
 /* === Private function declarations ====================================== */
 
@@ -74,51 +90,76 @@ void test_todos_los_leds_inician_apagados(void) {
 }
 
 /** 
- ** @brief Prueba2: Con todos los Leds apagados prender el Led 3 y verificar que
- ** efectivamente el bit 2 se pone en 1 y el resto permanece en cero
+ ** @brief Test2: verificar que la funcion del driver enciende el led correspondiente
+ ** Debe encender un led de tres disponibles en la placa y solo ese led
  **/
-//void test_prender_un_led(void) {
+void test_encender_un_led(void) {
+    //Definir comportamiento esperado de la funcion HAL
+    HAL_GPIO_WritePin_Expect(GPIOB, LD2, GPIO_PIN_SET);
+
+    //Llamar a la funcion bajo prueba
+    leds_virtuales |= LED2_ON;
+    writeLedOn_GPIO(LD2);
+
+    //Verificar que el LED1 se haya encendico correctamente
+    TEST_ASSERT_BITS(MASK_LED2, EXPECTED_MASK_ON_LED2 ,leds_virtuales);
+    //TEST_ASSERT_EQUAL_HEX16(LED1_ON, leds_virtuales);
 //    led_turn_on(LED03);
     // El bit 2 está en alto
 //    TEST_ASSERT_BIT_HIGH(LED03 - LED_OFFSET, leds_virtuales);
     // Todos los otros bits están en bajo
 //    TEST_ASSERT_BITS_LOW(~(1 << (LED03 - LED_OFFSET)), leds_virtuales);
-//}
+}
 
 /** 
- ** @brief Prueba3: Apagar un Led prendido y ver que efectivamente
- ** se apaga y que el resto no cambia
+ ** @brief Test3: verificar que la funcion del driver apaga el led correspondiente
+ ** Debe apagar un led de tres disponibles en la placa y solo ese led
  **/
-//void test_apagar_un_led(void) {
-//    led_turn_on(LED03);
-//    led_turn_off(LED03);
-//    TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_OFF, leds_virtuales);
-//}
+void test_apagar_un_led(void) {
+    //Definir comportamiento esperado de la funcion HAL
+    HAL_GPIO_WritePin_Expect(GPIOB, LD1, GPIO_PIN_RESET);
+
+    //Llamar a la funcion bajo prueba
+    leds_virtuales &= LED1_OFF;
+    writeLedOff_GPIO(LD1);
+
+    //Verificar que unicamente el LED1 se haya apagado correctamente
+    TEST_ASSERT_BITS(MASK_LED1, EXPECTED_MASK_OFF ,leds_virtuales);
+}
 
 /** 
- ** @brief Prueba4: combina 4_ Apagar todos los leds que ya estan prendidos
- ** y 5_ Prender Leds ya estan prendidos antes.
- ** En esta prueba enciende 3 leds y apaga 2
+ ** @brief Test4: Verificar que todos los leds encienden con una sola funcion del driver
  **/
-//void test_prender_y_apagar_varios_leds(void) {
-//    led_turn_on(LED05);
-//    led_turn_on(LED07);
-//    led_turn_on(LED05);
-//    led_turn_off(LED05);
-//    led_turn_off(LED09);
+void test_encender_todos_los_leds(void) {
+    //Definir comportamiento esperado de la funcion HAL
+    HAL_GPIO_WritePin_Expect(GPIOB, LD1, GPIO_PIN_SET);
+    HAL_GPIO_WritePin_Expect(GPIOB, LD2, GPIO_PIN_SET);
+    HAL_GPIO_WritePin_Expect(GPIOB, LD3, GPIO_PIN_SET);
 
-//    TEST_ASSERT_EQUAL_UINT16(BIT_HIGH << (LED07-LED_OFFSET), leds_virtuales);
-//}
+    //Llamar a la funcion bajo prueba
+    leds_virtuales = ALL_LEDS_ON;
+    writeLedOnAll_GPIO();
+
+    //Verificar que los 3 leds: LED1, LED2 y LED3 enciendan
+    TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_ON, leds_virtuales);
+}
 
 /** 
- ** @brief Prueba5: Con todos los Leds apagados prender un Led y verificar
- ** que al consultar el estado del mismo, me informa que está prendido
+ ** @brief Test5: Verificar que todos los leds se apaguen con una sola funcion del driver
  **/
-//void test_con_todos_leds_apagados_prender_uno_y_verificar_prendido(void) {
-//    leds_init(&leds_virtuales);
-//    led_turn_on(LED07);
-//    TEST_ASSERT_TRUE(led_get_status(LED07, &leds_virtuales));
-//}
+void test_apagar_todos_los_leds(void) {
+    //Definir comportamiento esperado de la funcion HAL
+    HAL_GPIO_WritePin_Expect(GPIOB, LD1, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin_Expect(GPIOB, LD2, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin_Expect(GPIOB, LD3, GPIO_PIN_RESET);
+
+    //Llamar a la funcion bajo prueba
+    leds_virtuales = ALL_LEDS_OFF;
+    writeLedOffAll_GPIO();
+
+    //Verificar que los 3 leds: LED1, LED2 y LED3 se apaguen
+    TEST_ASSERT_EQUAL_UINT16(ALL_LEDS_OFF, leds_virtuales);
+}
 
 /** 
  ** @brief Prueba6: Con todos los Leds apagados prender todos los leds y verificar

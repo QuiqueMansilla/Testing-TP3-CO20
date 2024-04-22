@@ -41,6 +41,19 @@ SPDX-License-Identifier: MIT
 #define LED_OFFSET 1
 #define ALL_LEDS_OFF 0x00
 #define ALL_LEDS_ON 0x03
+#define LED1_ON 0x01
+#define LED2_ON 0x02
+#define LED3_ON 0x04
+#define LED1_OFF 0xFE  // 0b 1111 1110
+#define LED2_OFF 0xFD  // 0b 1111 1101
+#define LED3_OFF 0xFB  // 0b 1111 1011
+#define MASK_LED1 0x01 // Usar con LED1_OFF o LED1_ON en TETS_ASSERT_BITS() 
+#define MASK_LED2 0x02 // Usar con LED2_OFF o LED2_ON en TETS_ASSERT_BITS()
+#define MASK_LED3 0x04 // Usar con LED3_OFF o LED3_ON en TETS_ASSERT_BITS()
+#define EXPECTED_MASK_OFF 0x00 // Usar solo en "test_apagar_un_led(void)" como mascara
+#define EXPECTED_MASK_ON_LED1 0x01 // Usar solo en "test_encender_un_led(void)" como mascara para LED1_ON
+#define EXPECTED_MASK_ON_LED2 0x02 // Usar solo en "test_encender_un_led(void)" como mascara para LED2_ON
+#define EXPECTED_MASK_ON_LED3 0x03 // Usar solo en "test_encender_un_led(void)" como mascara para LED3_ON
 #define PORT_ADDRESS_GPIOB 0xFF
 
 /* === Private data type declarations ==================================== */
@@ -52,8 +65,8 @@ SPDX-License-Identifier: MIT
 /* === Public variable definitions ===========================================*/
 
 /* === Private variable definitions ==========================================*/
-static uint16_t * Puerto_GPIO;
-static uint16_t * GPIOB;
+ uint16_t * Puerto_GPIO;
+ uint16_t * GPIOB;
 
 /* === Private function implementation ====================================== */
 static uint16_t led_to_mask(int LDx) {
@@ -85,14 +98,18 @@ bool toggleLed_GPIO(int LDx) {
 
 void writeLedOnAll_GPIO(void) {
     
-    HAL_GPIO_WritePin(GPIOB, LD1|LD2|LD3, GPIO_PIN_SET);
-    //Puerto_GPIO = GPIOB;
+    HAL_GPIO_WritePin(GPIOB, LD1, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, LD2, GPIO_PIN_SET);
+    HAL_GPIO_WritePin(GPIOB, LD3, GPIO_PIN_SET);
+    //Puerto_GPIO = GPIOB;S
     //*Puerto_GPIO = ALL_LEDS_ON;
 }
 
 void writeLedOffAll_GPIO(void) {
     
-    HAL_GPIO_WritePin(GPIOB, LD1|LD2|LD3, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, LD1, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, LD2, GPIO_PIN_RESET);
+    HAL_GPIO_WritePin(GPIOB, LD3, GPIO_PIN_RESET);
     //Puerto_GPIO = GPIOB;
     //*Puerto_GPIO = ALL_LEDS_OFF;
 }
